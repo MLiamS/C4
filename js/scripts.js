@@ -6,8 +6,14 @@ function Board(ctx, width, height) {
   this.height        = height;
   this.cellwidth     = this.width/7;
   this.cellheight    = this.height/6;
+  this.grid = [];
+    for (var x = 0; x < 7; x ++) {
+      this.grid[x] = [];
+      for (var y = 0; y < this.height; y++) {
+        this.grid[x][y] = "";
+      };
+    };
 
-  
 };
 
 Board.prototype.draw = function() {
@@ -36,9 +42,16 @@ Board.prototype.draw = function() {
 $(document).ready(function() {
   var canvas         = document.getElementById('canvas');
   var ctx            = canvas.getContext('2d');
-
+  canvas.addEventListener("mousedown", getPos);
   var gameboard        = new Board(ctx, canvas.width, canvas.height);
 
   gameboard.draw();
+
+  function getPos(event)
+
+  {
+    console.log("works" + event)
+
+};
 
 });
