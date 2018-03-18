@@ -6,6 +6,7 @@ D = [];
 E = [];
 F = [];
 G = [];
+var Turn = 0;
 
 function Board(ctx, width, height) {
   this.ctx           = ctx;
@@ -41,15 +42,26 @@ Board.prototype.draw = function() {
   };
 };
 
-function dropChecker(x,y) {
-  if (x == 0) { A.push(true) };
-  if (x == 1) { B.push(true) };
-  if (x == 2) { C.push(true) };
-  if (x == 3) { D.push(true) };
-  if (x == 4) { E.push(true) };
-  if (x == 5) { F.push(true) };
-  if (x == 6) { G.push(true) };
+function dropCheckerRed(x) {
+  if (x == 0) { A.push("R") };
+  if (x == 1) { B.push("R") };
+  if (x == 2) { C.push("R") };
+  if (x == 3) { D.push("R") };
+  if (x == 4) { E.push("R") };
+  if (x == 5) { F.push("R") };
+  if (x == 6) { G.push("R") };
+  Turn ++;
+};
 
+function dropCheckerYel(x) {
+  if (x == 0) { A.push("Y") };
+  if (x == 1) { B.push("Y") };
+  if (x == 2) { C.push("Y") };
+  if (x == 3) { D.push("Y") };
+  if (x == 4) { E.push("Y") };
+  if (x == 5) { F.push("Y") };
+  if (x == 6) { G.push("Y") };
+  Turn ++;
 };
 
 
@@ -70,10 +82,15 @@ $(document).ready(function() {
   function getPos(event) {
     var rect = canvas.getBoundingClientRect();
     var x = Math.floor((event.clientX - rect.left)/gameBoard.cellWidth);
-    var y = Math.floor((event.clientY - rect.top)/gameBoard.cellHeight);
-    console.log("cell x,y..." + "   " + x + " " + y);
+    // var y = Math.floor((event.clientY - rect.top)/gameBoard.cellHeight);
+    console.log("column "  + x);
 
-    dropChecker(x,y);
+    if (Turn%2 == 0) {
+      dropCheckerRed(x);
+    }
+      else {
+        dropCheckerYel(x)
+    };
 
   };
     gameBoard.draw();
