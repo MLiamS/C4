@@ -5,22 +5,32 @@ function Board(ctx, width, height) {
   this.height        = height;
   this.cellWidth     = this.width/7;
   this.cellHeight    = this.height/6;
-  this.A = [];
-  this.B = [];
-  this.C = [];
-  this.D = [];
-  this.E = [];
-  this.F = [];
-  this.G = [];
   this.Turn = 0;
-
   this.grid = [];
     for (var x = 0; x < 7; x ++) {
       this.grid[x] = [];
-      for (var y = 0; y < this.height; y++) {
-        this.grid[x][y] = "";
+      for (var y = 0; y < 6; y++) {
+        this.grid[x][y] = "0";
       };
     };
+};
+
+Board.prototype.draw = function() {
+  this.ctx.lineWidth = 3;
+
+  for (var x = this.cellWidth; x < this.width; x = x+this.cellWidth) {   //Draws Grid
+    this.ctx.beginPath();
+    this.ctx.moveTo(x,0);
+    this.ctx.lineTo(x, this.height);
+    this.ctx.stroke();
+  };
+
+  for (var y = this.cellHeight; y < this.height; y = y+this.cellHeight) {   //Draws Grid
+    this.ctx.beginPath();
+    this.ctx.moveTo(0,y);
+    this.ctx.lineTo(this.width, y);
+    this.ctx.stroke();
+  };
 };
 
 Board.prototype.dropChecker = function (x,y)  {
@@ -28,16 +38,31 @@ Board.prototype.dropChecker = function (x,y)  {
   } else {
       this.dropCheckerYel(x,y);
   };
+  this.Turn++;
 };
 
-Board.prototype.placeCheckers = function()  {
-  this.A[0];
+Board.prototype.dropCheckerRed = function(x, y) {
+  console.log(x,y);
+  if (this.grid[x][y] == '0' ) {
+    this.grid[x][y] = 'R'
+  };
+  console.log(this.grid)
+};
+
+Board.prototype.dropCheckerYel = function(x, y) {
+  console.log(x,y);
+  if (this.grid[x][y] == '0' ) {
+    this.grid[x][y] = 'Y'    
+  };
+  console.log(this.grid)
+};
+// Board.prototype.placeCheckers = function()  {
+//   this.A[0];
 
 
   // if (this.A.indexOf(0) == "R" ) {
   //   console.log("First cloumn is Red");
 
-  }
 
 
 // Board.prototype.animateChecker = function(x, y) {
@@ -60,67 +85,11 @@ Board.prototype.placeCheckers = function()  {
 // };
 
 
-Board.prototype.draw = function() {
-  this.ctx.lineWidth = 3;
 
-  if (this.A.length > 0) {
-          this.placeCheckers()
-          console.log("Placement");
-        };
-
-
-  for (var x = this.cellWidth; x < this.width; x = x+this.cellWidth) {   //Draws Grid
-    this.ctx.beginPath();
-    this.ctx.moveTo(x,0);
-    this.ctx.lineTo(x, this.height);
-    this.ctx.stroke();
-  };
-
-  for (var y = this.cellHeight; y < this.height; y = y+this.cellHeight) {   //Draws Grid
-    this.ctx.beginPath();
-    this.ctx.moveTo(0,y);
-    this.ctx.lineTo(this.width, y);
-    this.ctx.stroke();
-  };
-};
-
-Board.prototype.dropCheckerRed = function(x, y) {
-  if (x == 0 && this.A.length < 6) { this.A.push("R");this.Turn ++; };
-  if (x == 1 && this.B.length < 6) { this.B.push("R");this.Turn ++; };
-  if (x == 2 && this.C.length < 6) { this.C.push("R");this.Turn ++; };
-  if (x == 3 && this.D.length < 6) { this.D.push("R");this.Turn ++; };
-  if (x == 4 && this.E.length < 6) { this.E.push("R");this.Turn ++; };
-  if (x == 5 && this.F.length < 6) { this.F.push("R");this.Turn ++; };
-  if (x == 6 && this.G.length < 6) { this.G.push("R");this.Turn ++; };
-
-
-  console.log("A-[" + this.A  + "] B-[" + this.B  + "] " + "C-[" + this.C +"] " + "D-[" + this.D + "] " + "E-[" + this.E  + "] " + "F-[" + this.F + "]  G-[" + this.G + "]");
-  console.log(this.Turn);
-
-};
-
-Board.prototype.dropCheckerYel = function(x, y) {
-  if (x == 0 && this.A.length < 6) { this.A.push("Y");this.Turn ++; };
-  if (x == 1 && this.B.length < 6) { this.B.push("Y");this.Turn ++; };
-  if (x == 2 && this.C.length < 6) { this.C.push("Y");this.Turn ++; };
-  if (x == 3 && this.D.length < 6) { this.D.push("Y");this.Turn ++; };
-  if (x == 4 && this.E.length < 6) { this.E.push("Y");this.Turn ++; };
-  if (x == 5 && this.F.length < 6) { this.F.push("Y");this.Turn ++; };
-  if (x == 6 && this.G.length < 6) { this.G.push("Y");this.Turn ++; };
-
-  console.log("A-[" + this.A  + "] B-[" + this.B  + "] " + "C-[" + this.C +"] " + "D-[" + this.D + "] " + "E-[" + this.E  + "] " + "F-[" + this.F + "] " + "G-[" + this.G + "]");
-  console.log(this.Turn);
-};
-
-// function updateBoard() {
-//   if (A.length > 0) {
-//
-//
-//   }
-// }
-//
-// };
-
+  // if (this.A.length > 0) {
+  //         this.placeCheckers()
+  //         console.log("Placement");
+  //       };
 
 //Front-End
 $(document).ready(function() {
@@ -138,7 +107,7 @@ $(document).ready(function() {
     var x = Math.floor((event.clientX - rect.left)/gameBoard.cellWidth);
     var y = Math.floor((event.clientY - rect.top)/gameBoard.cellHeight);
     gameBoard.dropChecker(x,y);
-    console.log("column "  + x + " " + y);
+    console.log("Turn # = " + gameBoard.Turn +  " | grid @ "  + x + " " + y);
     gameBoard.draw();
 
   };
